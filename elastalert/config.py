@@ -250,6 +250,11 @@ def load_options(rule, conf, args=None):
         if 'doc_type' not in rule:
             raise EAException('doc_type must be specified.')
 
+    # Check that use_count_query is true if use_count_query_with_buffer is true
+    if rule.get('use_count_query_with_buffer'):
+        if 'use_count_query' not in rule or rule.get('use_count_query') != True:
+            raise EAException('use_count_query must be true.')
+
     # Check that query_key is set if use_terms_query
     if rule.get('use_terms_query'):
         if 'query_key' not in rule:

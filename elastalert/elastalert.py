@@ -481,7 +481,11 @@ class ElastAlerter():
 
         # Use buffer for normal queries, or run_every increments otherwise
         buffer_time = rule.get('buffer_time', self.buffer_time)
-        if not rule.get('use_count_query') and not rule.get('use_terms_query'):
+
+        is_not_count_and_terms_query = not rule.get('use_count_query') and not rule.get('use_terms_query')
+        is_count_query_with_buffer = rule.get('use_count_query_with_buffer')
+
+        if is_not_count_and_terms_query or is_count_query_with_buffer:
             buffer_delta = endtime - buffer_time
             # If we started using a previous run, don't go past that
             if 'minimum_starttime' in rule and rule['minimum_starttime'] > buffer_delta:
@@ -498,7 +502,10 @@ class ElastAlerter():
     def get_segment_size(self, rule):
         """ The segment size is either buffer_size for normal queries or run_every for
         count style queries. This mimicks the query size for when ElastAlert is running continuously. """
-        if not rule.get('use_count_query') and not rule.get('use_terms_query'):
+        is_not_count_and_terms_query = not rule.get('use_count_query') and not rule.get('use_terms_query')
+        is_count_query_with_buffer = rule.get('use_count_query_with_buffer')
+
+        if is_not_count_and_terms_query or is_count_query_with_buffer:
             return rule.get('buffer_time', self.buffer_time)
         return self.run_every
 
