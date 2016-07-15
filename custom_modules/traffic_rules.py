@@ -16,7 +16,7 @@ class TrafficComparation(RuleType):
     # You can ensure that the rule config file specifies all
     # of the options. Otherwise, ElastAlert will throw an exception
     # when trying to load the rule.
-    required_options = set(['deviation'])
+    required_options = set(['deviation', 'distance'])
 
     def __init__(self, rules, args=None):
         super(TrafficComparation, self).__init__(rules, args)
@@ -61,11 +61,11 @@ class TrafficComparation(RuleType):
 
         delay = self.rules['query_delay']
         if delay:
-            last_hits_end_time = datetime.now() - timedelta(**self.buffer_time) - delay
+            last_hits_end_time = datetime.now() - timedelta(**self.rules['distance']) - delay
         else:
-            last_hits_end_time = datetime.now() - timedelta(**self.buffer_time)
+            last_hits_end_time = datetime.now() - timedelta(**self.rules['distance'])
 
-        last_hits_start_time = last_hits_end_time - timedelta(**self.rules['time_frame'])
+        last_hits_start_time = last_hits_end_time - timedelta(**self.buffer_time)
 
         query = ElastAlerter.get_query(self.rules['filter'], last_hits_start_time, last_hits_end_time)
 

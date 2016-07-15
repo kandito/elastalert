@@ -25,8 +25,8 @@ deviation: -0.25
 #  growth percentage = -0.1, deviation = -0.3 is matched rule
 negative_growth: true
 
-time_frame:
-  days: 1
+distance:
+  days: 7
 
 # This option will cause ElastAlert to subtract a time delta from every query, causing the rule to run with a delay.
 # This is useful if the data is Elasticsearch doesn’t get indexed immediately.
